@@ -7,7 +7,7 @@
 // stb_rect_pack.h - v1.00 - public domain - rectangle packing
 // Sean Barrett 2014
 //
-// Useful for e.g. packing rectangular textures into an atlas.
+// Useful for e.g. packing rectangular FinalTextures into an atlas.
 // Does not do rotation.
 //
 // Not necessarily the awesomest packing method, but better than
