@@ -1,0 +1,35 @@
+# Blender 4.1.0 MTL File: 'None'
+# www.blender.org
+
+newmtl Bark01_SHD
+Ns 32.000008
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Bark01_SHD_baseColor.png
+map_Bump -bm 1.000000 Bark01_SHD_normal.png
+
+newmtl Petal02_su_SHD
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Petal02_su_SHD_baseColor.png
+map_Bump -bm 1.000000 Petal02_su_SHD_normal.png
+
+newmtl Petal04_su_SHD
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd Petal04_su_SHD_baseColor.png
+map_d Petal04_su_SHD_baseColor.png
+map_Bump -bm 1.000000 Petal04_su_SHD_normal.png

@@ -31,7 +31,7 @@ in vec2 TexCoords;
 in vec3 Normal;
 in vec3 FragPos;
 
-uniform PointLight pointLight;
+uniform PointLight eyePointLight1;
 uniform DirLight dirLight;
 uniform Material material;
 
@@ -49,7 +49,7 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
     // combine results
     vec3 ambient = light.ambient * vec3(texture(material.texture_diffuse1, TexCoords));
     vec3 diffuse = light.diffuse * diff * vec3(texture(material.texture_diffuse1, TexCoords));
-    vec3 specular = light.specular * spec * vec3(texture(material.texture_specular1, TexCoords));
+    vec3 specular = light.specular * spec * vec3(texture(material.texture_specular1, TexCoords).xxx);
     return (ambient + diffuse + specular);
 }
 
@@ -79,7 +79,12 @@ void main()
 {
     vec3 normal = normalize(Normal);
     vec3 viewDir = normalize(viewPosition - FragPos);
+
+    //Blending with discard
+    vec4 texColor = texture(material.texture_diffuse1, TexCoords);
+    if(texColor.a < 0.2)
+        discard;
     vec3 result = CalcDirLight(dirLight, normal, viewDir);
-    result += CalcPointLight(pointLight, normal, FragPos, viewDir);
+    result += CalcPointLight(eyePointLight1, normal, FragPos, viewDir);
     FragColor = vec4(result, 1.0);
 }

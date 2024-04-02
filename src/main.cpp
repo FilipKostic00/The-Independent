@@ -63,12 +63,22 @@ struct ProgramState {
     bool ImGuiEnabled = false;
     Camera camera;
     bool CameraMouseMovementUpdateEnabled = true;
-    glm::vec3 backpackPosition = glm::vec3(0.0f);
-    float backpackScale = 1.0f;
-    PointLight pointLight;
+    glm::vec3 islandModelPosition = glm::vec3(0.0f);
+    glm::vec3 lighthouseModelPosition = glm::vec3(0.0f);
+    glm::vec3 shedModelPosition = glm::vec3(0.0f);
+    glm::vec3 picnicTableModelPosition = glm::vec3(0.0f);
+    glm::vec3 treeModelPosition = glm::vec3(0.0f);
+    float islandModelScale = 0.1f;
+    float eyeModelScale = 1.0f;
+    float lighthouseModelScale = 0.3f;
+    float shedModelScale = 0.3f;
+    float picnicTableModelScale = 1.0f;
+    float treeModelScale = 1.0f;
+    PointLight eyePointLight1;
+    PointLight eyePointLight2;
     DirLight dirLight;
     ProgramState()
-            : camera(glm::vec3(0.0f, 0.0f, 6.0f)) {}
+            : camera(glm::vec3(0.0f, 0.0f, 20.0f)) {}
 
     void SaveToFile(std::string filename);
 
@@ -86,7 +96,23 @@ void ProgramState::SaveToFile(std::string filename) {
         << camera.Position.z << '\n'
         << camera.Front.x << '\n'
         << camera.Front.y << '\n'
-        << camera.Front.z << '\n';
+        << camera.Front.z << '\n'
+        << lighthouseModelPosition.x << '\n'
+        << lighthouseModelPosition.y << '\n'
+        << lighthouseModelPosition.z << '\n'
+        << lighthouseModelScale << '\n'
+        << shedModelPosition.x << '\n'
+        << shedModelPosition.y << '\n'
+        << shedModelPosition.z << '\n'
+        << shedModelScale << '\n'
+        << picnicTableModelPosition.x << '\n'
+        << picnicTableModelPosition.y << '\n'
+        << picnicTableModelPosition.z << '\n'
+        << picnicTableModelScale << '\n'
+        << treeModelPosition.x << '\n'
+        << treeModelPosition.y << '\n'
+        << treeModelPosition.z << '\n'
+        << treeModelScale << '\n';
 }
 
 void ProgramState::LoadFromFile(std::string filename) {
@@ -101,7 +127,23 @@ void ProgramState::LoadFromFile(std::string filename) {
            >> camera.Position.z
            >> camera.Front.x
            >> camera.Front.y
-           >> camera.Front.z;
+           >> camera.Front.z
+           >> lighthouseModelPosition.x
+           >> lighthouseModelPosition.y
+           >> lighthouseModelPosition.z
+           >> lighthouseModelScale
+           >> shedModelPosition.x
+           >> shedModelPosition.y
+           >> shedModelPosition.z
+           >> shedModelScale
+           >> picnicTableModelPosition.x
+           >> picnicTableModelPosition.y
+           >> picnicTableModelPosition.z
+           >> picnicTableModelScale
+           >> treeModelPosition.x
+           >> treeModelPosition.y
+           >> treeModelPosition.z
+           >> treeModelScale;
     }
 }
 
@@ -167,6 +209,8 @@ int main() {
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // build and compile shaders
     // -------------------------
@@ -174,24 +218,53 @@ int main() {
 
     // load models
     // -----------
-    Model ourModel("resources/objects/backpack/backpack.obj");
-    ourModel.SetShaderTextureNamePrefix("material.");
+    Model islandModel("resources/objects/island/island.obj");
+    islandModel.SetShaderTextureNamePrefix("material.");
 
-    //Point light
-    PointLight& pointLight = programState->pointLight;
-    pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
-    pointLight.ambient = glm::vec3(0.1, 0.1, 0.1);
-    pointLight.diffuse = glm::vec3(0.6, 0.6, 0.6);
-    pointLight.specular = glm::vec3(1.0, 1.0, 1.0);
+    Model eyeModel1("resources/objects/eyeball/eyeball.obj");
+    eyeModel1.SetShaderTextureNamePrefix("material.");
 
-    pointLight.constant = 1.0f;
-    pointLight.linear = 0.09f;
-    pointLight.quadratic = 0.032f;
+    Model eyeModel2("resources/objects/eyeball/eyeball.obj");
+    eyeModel2.SetShaderTextureNamePrefix("material.");
+
+    Model lighthouseModel("resources/objects/lighthouse/lighthouse.obj");
+    lighthouseModel.SetShaderTextureNamePrefix("material.");
+
+    Model shedModel("resources/objects/shed/shed.obj");
+    shedModel.SetShaderTextureNamePrefix("material.");
+
+    Model picnicTableModel("resources/objects/picnic table/picnic_table.obj");
+    picnicTableModel.SetShaderTextureNamePrefix("material.");
+
+    Model treeModel("resources/objects/tree/tree.obj");
+    treeModel.SetShaderTextureNamePrefix("material.");
+
+    //Eye point light 1
+    PointLight& eyePointLight1 = programState->eyePointLight1;
+    eyePointLight1.position = glm::vec3(4.0f, 4.0, 0.0);
+    eyePointLight1.ambient = glm::vec3(0.1, 0.1, 0.1);
+    eyePointLight1.diffuse = glm::vec3(0.6, 0.6, 0.6);
+    eyePointLight1.specular = glm::vec3(1.0, 1.0, 1.0);
+
+    eyePointLight1.constant = 1.0f;
+    eyePointLight1.linear = 0.09f;
+    eyePointLight1.quadratic = 0.032f;
+
+    //Eye point light 2
+    PointLight& eyePointLight2 = programState->eyePointLight2;
+    eyePointLight2.position = glm::vec3(4.0f, 4.0, 0.0);
+    eyePointLight2.ambient = glm::vec3(0.1, 0.1, 0.1);
+    eyePointLight2.diffuse = glm::vec3(0.6, 0.6, 0.6);
+    eyePointLight2.specular = glm::vec3(1.0, 1.0, 1.0);
+
+    eyePointLight2.constant = 1.0f;
+    eyePointLight2.linear = 0.09f;
+    eyePointLight2.quadratic = 0.032f;
 
     //Dir light
     DirLight& dirLight = programState->dirLight;
     dirLight.direction = glm::vec3(-0.2f, -1.0f, -0.3f);
-    dirLight.ambient = glm::vec3(0.5f, 0.5f, 0.5f);
+    dirLight.ambient = glm::vec3(0.1f, 0.1f, 0.1f);
     dirLight.diffuse = glm::vec3(0.4f, 0.4f, 0.4f);
     dirLight.specular = glm::vec3(0.5f, 0.5f, 0.5f);
 
@@ -226,17 +299,29 @@ int main() {
         ourShader.setVec3("dirLight.diffuse", dirLight.diffuse);
         ourShader.setVec3("dirLight.specular", dirLight.specular);
 
-        //Point light
-        pointLight.position = glm::vec3(4.0 * cos(currentFrame), 4.0f, 4.0 * sin(currentFrame));
-        ourShader.setVec3("pointLight.position", pointLight.position);
-        ourShader.setVec3("pointLight.ambient", pointLight.ambient);
-        ourShader.setVec3("pointLight.diffuse", pointLight.diffuse);
-        ourShader.setVec3("pointLight.specular", pointLight.specular);
-        ourShader.setFloat("pointLight.constant", pointLight.constant);
-        ourShader.setFloat("pointLight.linear", pointLight.linear);
-        ourShader.setFloat("pointLight.quadratic", pointLight.quadratic);
+        //Eye point light 1
+        eyePointLight1.position = glm::vec3(20.0 * cos(currentFrame / 2), 10.0 * sin(currentFrame / 2), 10.0 * sin(currentFrame / 2));
+        ourShader.setVec3("eyePointLight1.position", eyePointLight1.position);
+        ourShader.setVec3("eyePointLight1.ambient", eyePointLight1.ambient);
+        ourShader.setVec3("eyePointLight1.diffuse", eyePointLight1.diffuse);
+        ourShader.setVec3("eyePointLight1.specular", eyePointLight1.specular);
+        ourShader.setFloat("eyePointLight1.constant", eyePointLight1.constant);
+        ourShader.setFloat("eyePointLight1.linear", eyePointLight1.linear);
+        ourShader.setFloat("eyePointLight1.quadratic", eyePointLight1.quadratic);
+
+        //Eye point light 2
+        eyePointLight2.position = glm::vec3(-10.0 * sin(currentFrame / 2), -10.0 * sin(currentFrame / 2), -20.0 * cos(currentFrame / 2));
+        ourShader.setVec3("eyePointLight2.position", eyePointLight2.position);
+        ourShader.setVec3("eyePointLight2.ambient", eyePointLight2.ambient);
+        ourShader.setVec3("eyePointLight2.diffuse", eyePointLight2.diffuse);
+        ourShader.setVec3("eyePointLight2.specular", eyePointLight2.specular);
+        ourShader.setFloat("eyePointLight2.constant", eyePointLight2.constant);
+        ourShader.setFloat("eyePointLight2.linear", eyePointLight2.linear);
+        ourShader.setFloat("eyePointLight2.quadratic", eyePointLight2.quadratic);
+
         ourShader.setVec3("viewPosition", programState->camera.Position);
         ourShader.setFloat("material.shininess", 32.0f);
+
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(programState->camera.Zoom),
                                                 (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
@@ -244,13 +329,72 @@ int main() {
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("view", view);
 
-        // render the loaded model
+        // render the island model
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model,
-                               programState->backpackPosition); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(programState->backpackScale));    // it's a bit too big for our scene, so scale it down
+                               programState->islandModelPosition); // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(programState->islandModelScale));    // it's a bit too big for our scene, so scale it down
         ourShader.setMat4("model", model);
-        ourModel.Draw(ourShader);
+        islandModel.Draw(ourShader);
+
+        // render eye model 1
+        glm::mat4 eyeball1 = glm::mat4(1.0f);
+        eyeball1 = glm::translate(eyeball1, eyePointLight1.position); //Eye moves like light
+
+        // Calculate the direction from the eye position to the target point (shed position)
+        glm::vec3 targetPosition = glm::vec3(programState->shedModelPosition);
+        glm::vec3 direction = glm::normalize(targetPosition - eyePointLight1.position);
+
+        // Calculate the angles to rotate the eye to align it with the direction
+        float yaw = atan2(direction.z, direction.x);
+        float pitch = asin(direction.y);
+        eyeball1 = glm::rotate(eyeball1, -yaw, glm::vec3(0.0f, 1.0f, 0.0f)); // Rotate around y-axis (yaw)
+        eyeball1 = glm::rotate(eyeball1, pitch, glm::vec3(0.0f, 0.0f, 1.0f)); // Rotate around z-axis (pitch)
+        eyeball1 = glm::scale(eyeball1, glm::vec3(programState->eyeModelScale));
+        ourShader.setMat4("model", eyeball1);
+        eyeModel1.Draw(ourShader);
+
+        // render eye model 2
+        glm::mat4 eyeball2 = glm::mat4(1.0f);
+        eyeball2 = glm::translate(eyeball2, eyePointLight2.position); //Eye moves like light
+
+        direction = glm::normalize(targetPosition - eyePointLight2.position);
+        yaw = atan2(direction.z, direction.x);
+        pitch = asin(direction.y);
+
+        eyeball2 = glm::rotate(eyeball2, -yaw, glm::vec3(0.0f, 1.0f, 0.0f)); // Rotate around y-axis (yaw)
+        eyeball2 = glm::rotate(eyeball2, pitch, glm::vec3(0.0f, 0.0f, 1.0f)); // Rotate around z-axis (pitch)
+        eyeball2 = glm::scale(eyeball2, glm::vec3(programState->eyeModelScale));
+        ourShader.setMat4("model", eyeball2);
+        eyeModel2.Draw(ourShader);
+
+        // render the lighthouse model
+        glm::mat4 lighthouse = glm::mat3(1.0f);
+        lighthouse = glm::translate(lighthouse, programState->lighthouseModelPosition);
+        lighthouse = glm::scale(lighthouse, glm::vec3(programState->lighthouseModelScale));
+        ourShader.setMat4("model", lighthouse);
+        lighthouseModel.Draw(ourShader);
+
+        // render shed model
+        glm::mat4 shed = glm::mat3(1.0f);
+        shed = glm::translate(shed, programState->shedModelPosition);
+        shed = glm::scale(shed, glm::vec3(programState->shedModelScale));
+        ourShader.setMat4("model", shed);
+        shedModel.Draw(ourShader);
+
+        // render picnic table model
+        glm::mat4 picnicTable = glm::mat3(1.0f);
+        picnicTable = glm::translate(picnicTable, programState->picnicTableModelPosition);
+        picnicTable = glm::scale(picnicTable, glm::vec3(programState->picnicTableModelScale));
+        ourShader.setMat4("model", picnicTable);
+        picnicTableModel.Draw(ourShader);
+
+        // render tree model
+        glm::mat4 tree = glm::mat3(1.0f);
+        tree = glm::translate(tree, programState->treeModelPosition);
+        tree = glm::scale(tree, glm::vec3(programState->treeModelScale));
+        ourShader.setMat4("model", tree);
+        treeModel.Draw(ourShader);
 
         if (programState->ImGuiEnabled)
             DrawImGui(programState);
@@ -331,16 +475,37 @@ void DrawImGui(ProgramState *programState) {
 
     {
         static float f = 0.0f;
-        ImGui::Begin("Hello window");
-        ImGui::Text("Hello text");
-        ImGui::SliderFloat("Float slider", &f, 0.0, 1.0);
-        ImGui::ColorEdit3("Background color", (float *) &programState->clearColor);
-        ImGui::DragFloat3("Backpack position", (float*)&programState->backpackPosition);
-        ImGui::DragFloat("Backpack scale", &programState->backpackScale, 0.05, 0.1, 4.0);
+        ImGui::Begin("Controls");
+        ImGui::Text("Controls");
 
-        ImGui::DragFloat("pointLight.constant", &programState->pointLight.constant, 0.05, 0.0, 1.0);
-        ImGui::DragFloat("pointLight.linear", &programState->pointLight.linear, 0.05, 0.0, 1.0);
-        ImGui::DragFloat("pointLight.quadratic", &programState->pointLight.quadratic, 0.05, 0.0, 1.0);
+        // Island controls
+        ImGui::ColorEdit3("Background color", (float *) &programState->clearColor);
+        ImGui::DragFloat3("Island position", (float*)&programState->islandModelPosition);
+        ImGui::DragFloat("Island scale", &programState->islandModelScale, 0.05, 0.1, 4.0);
+
+        //Lighthouse controls
+        ImGui::DragFloat3("Lighthouse position", (float*)&programState->lighthouseModelPosition,0.05f);
+        ImGui::DragFloat("Lighthouse scale", &programState->lighthouseModelScale, 0.05, 0.1, 4.0);
+
+        //Shed controls
+        ImGui::DragFloat3("Shed position", (float*)&programState->shedModelPosition,0.05f);
+        ImGui::DragFloat("Shed scale", &programState->shedModelScale, 0.05, 0.1, 4.0);
+
+        // Picnic table controls
+        ImGui::DragFloat3("Picnic table position", (float*)&programState->picnicTableModelPosition,0.05f);
+        ImGui::DragFloat("Picnic table scale", &programState->picnicTableModelScale, 0.05, 0.1, 4.0);
+
+        // Tree controls
+        ImGui::DragFloat3("Tree position", (float*)&programState->treeModelPosition,0.05f);
+        ImGui::DragFloat("Tree scale", &programState->treeModelScale, 0.05, 0.1, 4.0);
+
+        //Planet controls
+        ImGui::DragFloat("Planet scale", &programState->eyeModelScale, 0.05, 0.1, 4.0);
+
+        //Eye light contols
+        ImGui::DragFloat("eyePointLight1.constant", &programState->eyePointLight1.constant, 0.05, 0.0, 1.0);
+        ImGui::DragFloat("eyePointLight1.linear", &programState->eyePointLight1.linear, 0.05, 0.0, 1.0);
+        ImGui::DragFloat("eyePointLight1.quadratic", &programState->eyePointLight1.quadratic, 0.05, 0.0, 1.0);
         ImGui::End();
     }
 
