@@ -27,8 +27,8 @@ void processInput(GLFWwindow *window);
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1280;
+const unsigned int SCR_HEIGHT = 720;
 
 // camera
 
@@ -68,14 +68,20 @@ struct ProgramState {
     glm::vec3 shedModelPosition = glm::vec3(0.0f);
     glm::vec3 picnicTableModelPosition = glm::vec3(0.0f);
     glm::vec3 treeModelPosition = glm::vec3(0.0f);
+    glm::vec3 roundTableModelPosition = glm::vec3(0.0f);
+    glm::vec3 candleModelPosition = roundTableModelPosition;
     float islandModelScale = 0.1f;
     float eyeModelScale = 1.0f;
     float lighthouseModelScale = 0.3f;
     float shedModelScale = 0.3f;
     float picnicTableModelScale = 1.0f;
     float treeModelScale = 1.0f;
+    float roundTableModelScale = 1.0f;
+    float candleModelScale = 0.1f;
+    bool blinn = false;
     PointLight eyePointLight1;
     PointLight eyePointLight2;
+    PointLight candlePointLight;
     DirLight dirLight;
     ProgramState()
             : camera(glm::vec3(0.0f, 0.0f, 20.0f)) {}
@@ -112,7 +118,15 @@ void ProgramState::SaveToFile(std::string filename) {
         << treeModelPosition.x << '\n'
         << treeModelPosition.y << '\n'
         << treeModelPosition.z << '\n'
-        << treeModelScale << '\n';
+        << treeModelScale << '\n'
+        << roundTableModelPosition.x << '\n'
+        << roundTableModelPosition.y << '\n'
+        << roundTableModelPosition.z << '\n'
+        << roundTableModelScale << '\n'
+        << candleModelPosition.x << '\n'
+        << candleModelPosition.y << '\n'
+        << candleModelPosition.z << '\n'
+        << candleModelScale << '\n';
 }
 
 void ProgramState::LoadFromFile(std::string filename) {
@@ -143,7 +157,15 @@ void ProgramState::LoadFromFile(std::string filename) {
            >> treeModelPosition.x
            >> treeModelPosition.y
            >> treeModelPosition.z
-           >> treeModelScale;
+           >> treeModelScale
+           >> roundTableModelPosition.x
+           >> roundTableModelPosition.y
+           >> roundTableModelPosition.z
+           >> roundTableModelScale
+           >> candleModelPosition.x
+           >> candleModelPosition.y
+           >> candleModelPosition.z
+           >> candleModelScale;
     }
 }
 
@@ -239,6 +261,12 @@ int main() {
     Model treeModel("resources/objects/tree/tree.obj");
     treeModel.SetShaderTextureNamePrefix("material.");
 
+    Model roundTableModel("resources/objects/round-table/round_table.obj");
+    roundTableModel.SetShaderTextureNamePrefix("material.");
+
+    Model candleModel("resources/objects/candle/candle.obj");
+    candleModel.SetShaderTextureNamePrefix("material.");
+
     //Eye point light 1
     PointLight& eyePointLight1 = programState->eyePointLight1;
     eyePointLight1.position = glm::vec3(4.0f, 4.0, 0.0);
@@ -260,6 +288,17 @@ int main() {
     eyePointLight2.constant = 1.0f;
     eyePointLight2.linear = 0.09f;
     eyePointLight2.quadratic = 0.032f;
+
+    //Candle point light
+    PointLight& candlePointLight = programState->candlePointLight;
+    candlePointLight.position = glm::vec3(programState->candleModelPosition.x,programState->candleModelPosition.y + 0.005f,programState->candleModelPosition.z);
+    candlePointLight.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
+    candlePointLight.diffuse = glm::vec3(0.5f, 0.5f, 0.5f);
+    candlePointLight.specular = glm::vec3(1.0, 1.0, 1.0);
+
+    candlePointLight.constant = 1.0f;
+    candlePointLight.linear = 0.09f;
+    candlePointLight.quadratic = 0.032f;
 
     //Dir light
     DirLight& dirLight = programState->dirLight;
@@ -293,6 +332,7 @@ int main() {
 
         // don't forget to enable shader before setting uniforms
         ourShader.use();
+        ourShader.setVec3("viewPosition", programState->camera.Position);
         //Dir Light
         ourShader.setVec3("dirLight.direction", dirLight.direction);
         ourShader.setVec3("dirLight.ambient", dirLight.ambient);
@@ -319,8 +359,27 @@ int main() {
         ourShader.setFloat("eyePointLight2.linear", eyePointLight2.linear);
         ourShader.setFloat("eyePointLight2.quadratic", eyePointLight2.quadratic);
 
-        ourShader.setVec3("viewPosition", programState->camera.Position);
-        ourShader.setFloat("material.shininess", 32.0f);
+        // Candle point light
+        // TO DO: Place this in imgui
+        glm::vec3 candleFlameColor = glm::vec3(1.0, 0.5, 0.1); // Example flame color (adjust as needed)
+        float pulseSpeed = 1.0f; // Adjust the speed of pulsation as needed
+
+        // Time-based modulation for pulsating effect
+        float intensityModifier = 0.5f + 0.5f * sin(currentFrame * pulseSpeed);
+
+        candlePointLight.ambient = candleFlameColor * intensityModifier;
+        candlePointLight.diffuse = candleFlameColor * intensityModifier;
+        candlePointLight.specular = candleFlameColor * intensityModifier;
+
+        ourShader.setVec3("candlePointLight.ambient", candlePointLight.ambient);
+        ourShader.setVec3("candlePointLight.diffuse", candlePointLight.diffuse);
+        ourShader.setVec3("candlePointLight.specular", candlePointLight.specular);
+        ourShader.setFloat("candlePointLight.constant", candlePointLight.constant);
+        ourShader.setFloat("candlePointLight.linear", candlePointLight.linear);
+        ourShader.setFloat("candlePointLight.quadratic", candlePointLight.quadratic);
+
+
+        ourShader.setBool("blinn", programState->blinn);
 
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(programState->camera.Zoom),
@@ -396,6 +455,20 @@ int main() {
         ourShader.setMat4("model", tree);
         treeModel.Draw(ourShader);
 
+        // render round table model
+        glm::mat4 roundTable = glm::mat3(1.0f);
+        roundTable = glm::translate(roundTable, programState->roundTableModelPosition);
+        roundTable = glm::scale(roundTable, glm::vec3(programState->roundTableModelScale));
+        ourShader.setMat4("model", roundTable);
+        roundTableModel.Draw(ourShader);
+
+        // render candle model
+        glm::mat4 candle = glm::mat3(1.0f);
+        candle = glm::translate(candle, programState->candleModelPosition);
+        candle = glm::scale(candle, glm::vec3(programState->candleModelScale));
+        ourShader.setMat4("model", candle);
+        candleModel.Draw(ourShader);
+
         if (programState->ImGuiEnabled)
             DrawImGui(programState);
 
@@ -466,7 +539,7 @@ void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
     programState->camera.ProcessMouseScroll(yoffset);
 }
-
+//TO DO: Tidy up gui
 void DrawImGui(ProgramState *programState) {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
@@ -481,31 +554,48 @@ void DrawImGui(ProgramState *programState) {
         // Island controls
         ImGui::ColorEdit3("Background color", (float *) &programState->clearColor);
         ImGui::DragFloat3("Island position", (float*)&programState->islandModelPosition);
-        ImGui::DragFloat("Island scale", &programState->islandModelScale, 0.05, 0.1, 4.0);
+        ImGui::DragFloat("Island scale", &programState->islandModelScale, 0.005, 0.1, 4.0);
 
         //Lighthouse controls
-        ImGui::DragFloat3("Lighthouse position", (float*)&programState->lighthouseModelPosition,0.05f);
-        ImGui::DragFloat("Lighthouse scale", &programState->lighthouseModelScale, 0.05, 0.1, 4.0);
+        ImGui::DragFloat3("Lighthouse position", (float*)&programState->lighthouseModelPosition,0.005f);
+        ImGui::DragFloat("Lighthouse scale", &programState->lighthouseModelScale, 0.005, 0.1, 4.0);
 
         //Shed controls
-        ImGui::DragFloat3("Shed position", (float*)&programState->shedModelPosition,0.05f);
-        ImGui::DragFloat("Shed scale", &programState->shedModelScale, 0.05, 0.1, 4.0);
+        ImGui::DragFloat3("Shed position", (float*)&programState->shedModelPosition,0.005f);
+        ImGui::DragFloat("Shed scale", &programState->shedModelScale, 0.005, 0.1, 4.0);
 
         // Picnic table controls
-        ImGui::DragFloat3("Picnic table position", (float*)&programState->picnicTableModelPosition,0.05f);
-        ImGui::DragFloat("Picnic table scale", &programState->picnicTableModelScale, 0.05, 0.1, 4.0);
+        ImGui::DragFloat3("Picnic table position", (float*)&programState->picnicTableModelPosition,0.005f);
+        ImGui::DragFloat("Picnic table scale", &programState->picnicTableModelScale, 0.005, 0.1, 4.0);
 
         // Tree controls
-        ImGui::DragFloat3("Tree position", (float*)&programState->treeModelPosition,0.05f);
-        ImGui::DragFloat("Tree scale", &programState->treeModelScale, 0.05, 0.1, 4.0);
+        ImGui::DragFloat3("Tree position", (float*)&programState->treeModelPosition,0.005f);
+        ImGui::DragFloat("Tree scale", &programState->treeModelScale, 0.005, 0.1, 4.0);
+
+        // round table controls
+        ImGui::DragFloat3("Round Table position", (float*)&programState->roundTableModelPosition,0.005f);
+        ImGui::DragFloat("Round Table scale", &programState->roundTableModelScale, 0.005, 0.1, 4.0);
+
+        // candle controls
+        ImGui::DragFloat3("Candle position", (float*)&programState->candleModelPosition,0.005f);
+        ImGui::DragFloat("Candle scale", &programState->candleModelScale, 0.005, 0.1, 4.0);
+
+        //Candle light controls
+        ImGui::DragFloat("candlePointLight position", (float*)&programState->candlePointLight.position, 0.005);
+        ImGui::DragFloat("candlePointLight.constant", &programState->candlePointLight.constant, 0.005, 0.0, 1.0);
+        ImGui::DragFloat("candlePointLight.linear", &programState->candlePointLight.linear, 0.005, 0.0, 1.0);
+        ImGui::DragFloat("candlePointLight.quadratic", &programState->candlePointLight.quadratic, 0.005, 0.0, 1.0);
 
         //Planet controls
         ImGui::DragFloat("Planet scale", &programState->eyeModelScale, 0.05, 0.1, 4.0);
 
-        //Eye light contols
-        ImGui::DragFloat("eyePointLight1.constant", &programState->eyePointLight1.constant, 0.05, 0.0, 1.0);
-        ImGui::DragFloat("eyePointLight1.linear", &programState->eyePointLight1.linear, 0.05, 0.0, 1.0);
-        ImGui::DragFloat("eyePointLight1.quadratic", &programState->eyePointLight1.quadratic, 0.05, 0.0, 1.0);
+        //Eye light controls
+        ImGui::DragFloat("eyePointLight1.constant", &programState->eyePointLight1.constant, 0.005, 0.0, 1.0);
+        ImGui::DragFloat("eyePointLight1.linear", &programState->eyePointLight1.linear, 0.005, 0.0, 1.0);
+        ImGui::DragFloat("eyePointLight1.quadratic", &programState->eyePointLight1.quadratic, 0.005, 0.0, 1.0);
+
+
+
         ImGui::End();
     }
 
@@ -533,4 +623,7 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
         }
         programState->CameraMouseMovementUpdateEnabled = !programState->ImGuiEnabled;
     }
+
+    if(key == GLFW_KEY_B && action == GLFW_PRESS)
+        programState->blinn = !programState->blinn;
 }
