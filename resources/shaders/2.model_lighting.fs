@@ -99,6 +99,8 @@ void main()
     if(texColor.a < 0.2)
         discard;
     vec3 result = CalcDirLight(dirLight, normal, viewDir);
+    //result += CalcPointLight(candlePointLight, normal, FragPos, viewDir);
+    result += CalcPointLight(eyePointLight2, normal, FragPos, viewDir);
     result += CalcPointLight(eyePointLight1, normal, FragPos, viewDir);
     FragColor = vec4(result, 1.0);
 }
