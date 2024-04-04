@@ -270,28 +270,28 @@ int main() {
     //Eye point light 1
     PointLight& eyePointLight1 = programState->eyePointLight1;
     eyePointLight1.position = glm::vec3(4.0f, 4.0, 0.0);
-    eyePointLight1.ambient = glm::vec3(0.1, 0.1, 0.1);
-    eyePointLight1.diffuse = glm::vec3(0.6, 0.6, 0.6);
+    eyePointLight1.ambient = glm::vec3(0.735f, 0.735f, 0.735f);
+    eyePointLight1.diffuse = glm::vec3(0.8, 0.8, 0.8);
     eyePointLight1.specular = glm::vec3(1.0, 1.0, 1.0);
 
-    eyePointLight1.constant = 1.0f;
-    eyePointLight1.linear = 0.09f;
-    eyePointLight1.quadratic = 0.032f;
+    eyePointLight1.constant = 0.505f;
+    eyePointLight1.linear = 0.025f;
+    eyePointLight1.quadratic = 0.015f;
 
     //Eye point light 2
     PointLight& eyePointLight2 = programState->eyePointLight2;
     eyePointLight2.position = glm::vec3(4.0f, 4.0, 0.0);
-    eyePointLight2.ambient = glm::vec3(0.1, 0.1, 0.1);
-    eyePointLight2.diffuse = glm::vec3(0.6, 0.6, 0.6);
+    eyePointLight2.ambient = glm::vec3(0.735f, 0.735f, 0.735f);
+    eyePointLight2.diffuse = glm::vec3(0.8, 0.8, 0.8);
     eyePointLight2.specular = glm::vec3(1.0, 1.0, 1.0);
 
-    eyePointLight2.constant = 1.0f;
-    eyePointLight2.linear = 0.09f;
-    eyePointLight2.quadratic = 0.032f;
+    eyePointLight2.constant = 0.505f;
+    eyePointLight2.linear = 0.025f;
+    eyePointLight2.quadratic = 0.015f;
 
     //Candle point light
     PointLight& candlePointLight = programState->candlePointLight;
-    candlePointLight.position = glm::vec3(programState->candleModelPosition.x,programState->candleModelPosition.y + 0.005f,programState->candleModelPosition.z);
+    candlePointLight.position = glm::vec3(0.90f, -1.7f, -1.545f);
     candlePointLight.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
     candlePointLight.diffuse = glm::vec3(0.5f, 0.5f, 0.5f);
     candlePointLight.specular = glm::vec3(1.0, 1.0, 1.0);
@@ -304,8 +304,8 @@ int main() {
     DirLight& dirLight = programState->dirLight;
     dirLight.direction = glm::vec3(-0.2f, -1.0f, -0.3f);
     dirLight.ambient = glm::vec3(0.1f, 0.1f, 0.1f);
-    dirLight.diffuse = glm::vec3(0.4f, 0.4f, 0.4f);
-    dirLight.specular = glm::vec3(0.5f, 0.5f, 0.5f);
+    dirLight.diffuse = glm::vec3(0.05f, 0.05f, 0.05f);
+    dirLight.specular = glm::vec3(0.05f, 0.05f, 0.05f);
 
 
     // draw in wireframe
@@ -360,23 +360,23 @@ int main() {
         ourShader.setFloat("eyePointLight2.quadratic", eyePointLight2.quadratic);
 
         // Candle point light
-        // TO DO: Place this in imgui
-        glm::vec3 candleFlameColor = glm::vec3(1.0, 0.5, 0.1); // Example flame color (adjust as needed)
-        float pulseSpeed = 1.0f; // Adjust the speed of pulsation as needed
-
-        // Time-based modulation for pulsating effect
-        float intensityModifier = 0.5f + 0.5f * sin(currentFrame * pulseSpeed);
-
-        candlePointLight.ambient = candleFlameColor * intensityModifier;
-        candlePointLight.diffuse = candleFlameColor * intensityModifier;
-        candlePointLight.specular = candleFlameColor * intensityModifier;
-
-        ourShader.setVec3("candlePointLight.ambient", candlePointLight.ambient);
-        ourShader.setVec3("candlePointLight.diffuse", candlePointLight.diffuse);
-        ourShader.setVec3("candlePointLight.specular", candlePointLight.specular);
-        ourShader.setFloat("candlePointLight.constant", candlePointLight.constant);
-        ourShader.setFloat("candlePointLight.linear", candlePointLight.linear);
-        ourShader.setFloat("candlePointLight.quadratic", candlePointLight.quadratic);
+        // TO DO: Place this in imgui and fix light position
+//        glm::vec3 candleFlameColor = glm::vec3(0.1f, 0.05f, 0.01f); // Example flame color (adjust as needed)
+//        float pulseSpeed = 0.5f; // Adjust the speed of pulsation as needed
+//
+//        // Time-based modulation for pulsating effect
+//        float intensityModifier = 2.0f + 0.5f * sin(currentFrame * pulseSpeed);
+//
+//        candlePointLight.ambient = candleFlameColor;
+//        candlePointLight.diffuse = candleFlameColor;
+//        candlePointLight.specular = candleFlameColor;
+//
+//        ourShader.setVec3("candlePointLight.ambient", candlePointLight.ambient);
+//        ourShader.setVec3("candlePointLight.diffuse", candlePointLight.diffuse);
+//        ourShader.setVec3("candlePointLight.specular", candlePointLight.specular);
+//        ourShader.setFloat("candlePointLight.constant", candlePointLight.constant);
+//        ourShader.setFloat("candlePointLight.linear", candlePointLight.linear);
+//        ourShader.setFloat("candlePointLight.quadratic", candlePointLight.quadratic);
 
 
         ourShader.setBool("blinn", programState->blinn);
@@ -544,57 +544,229 @@ void DrawImGui(ProgramState *programState) {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+   // ImGui::ShowDemoWindow();
 
 
     {
         static float f = 0.0f;
         ImGui::Begin("Controls");
         ImGui::Text("Controls");
+        if(ImGui::CollapsingHeader("Backgorund"))
+        {
+            if(ImGui::TreeNode("Color"))
+            {
+                ImGui::ColorEdit3("Background color", (float *) &programState->clearColor);
+                ImGui::TreePop();
+            }
+        }
+        if(ImGui::CollapsingHeader("Models"))
+        {
+            if(ImGui::TreeNode("Island"))
+            {
+                if(ImGui::TreeNode("Position"))
+                {
+                    // Island controls
+                    ImGui::DragFloat3("Island position", (float*)&programState->islandModelPosition);
+                    ImGui::TreePop();
+                }
 
-        // Island controls
-        ImGui::ColorEdit3("Background color", (float *) &programState->clearColor);
-        ImGui::DragFloat3("Island position", (float*)&programState->islandModelPosition);
-        ImGui::DragFloat("Island scale", &programState->islandModelScale, 0.005, 0.1, 4.0);
+                if(ImGui::TreeNode("Scale"))
+                {
+                    ImGui::DragFloat("Island scale", &programState->islandModelScale, 0.005, 0.1, 4.0);
+                    ImGui::TreePop();
+                }
+                ImGui::TreePop();
+            }
 
-        //Lighthouse controls
-        ImGui::DragFloat3("Lighthouse position", (float*)&programState->lighthouseModelPosition,0.005f);
-        ImGui::DragFloat("Lighthouse scale", &programState->lighthouseModelScale, 0.005, 0.1, 4.0);
+            if(ImGui::TreeNode("Lighthouse"))
+            {
+                if(ImGui::TreeNode("Position"))
+                {
+                    ImGui::DragFloat3("Lighthouse position", (float*)&programState->lighthouseModelPosition,0.005f);
+                    ImGui::TreePop();
+                }
 
-        //Shed controls
-        ImGui::DragFloat3("Shed position", (float*)&programState->shedModelPosition,0.005f);
-        ImGui::DragFloat("Shed scale", &programState->shedModelScale, 0.005, 0.1, 4.0);
+                if(ImGui::TreeNode("Scale"))
+                {
+                    ImGui::DragFloat("Lighthouse scale", &programState->lighthouseModelScale, 0.005, 0.1, 4.0);
+                    ImGui::TreePop();
+                }
+                ImGui::TreePop();
+            }
 
-        // Picnic table controls
-        ImGui::DragFloat3("Picnic table position", (float*)&programState->picnicTableModelPosition,0.005f);
-        ImGui::DragFloat("Picnic table scale", &programState->picnicTableModelScale, 0.005, 0.1, 4.0);
+            if(ImGui::TreeNode("Shed"))
+            {
+                if(ImGui::TreeNode("Position"))
+                {
+                    ImGui::DragFloat3("Shed position", (float*)&programState->shedModelPosition,0.005f);
+                    ImGui::TreePop();
+                }
 
-        // Tree controls
-        ImGui::DragFloat3("Tree position", (float*)&programState->treeModelPosition,0.005f);
-        ImGui::DragFloat("Tree scale", &programState->treeModelScale, 0.005, 0.1, 4.0);
+                if(ImGui::TreeNode("Scale"))
+                {
+                    ImGui::DragFloat("Shed scale", &programState->shedModelScale, 0.005, 0.1, 4.0);
+                    ImGui::TreePop();
+                }
+                ImGui::TreePop();
+            }
 
-        // round table controls
-        ImGui::DragFloat3("Round Table position", (float*)&programState->roundTableModelPosition,0.005f);
-        ImGui::DragFloat("Round Table scale", &programState->roundTableModelScale, 0.005, 0.1, 4.0);
+            if(ImGui::TreeNode("Picnic Table"))
+            {
+                if(ImGui::TreeNode("Position"))
+                {
+                    ImGui::DragFloat3("Picnic table position", (float*)&programState->picnicTableModelPosition,0.005f);
+                    ImGui::TreePop();
+                }
 
-        // candle controls
-        ImGui::DragFloat3("Candle position", (float*)&programState->candleModelPosition,0.005f);
-        ImGui::DragFloat("Candle scale", &programState->candleModelScale, 0.005, 0.1, 4.0);
+                if(ImGui::TreeNode("Scale"))
+                {
+                    ImGui::DragFloat("Picnic table scale", &programState->picnicTableModelScale, 0.005, 0.1, 4.0);
+                    ImGui::TreePop();
+                }
+                ImGui::TreePop();
+            }
 
-        //Candle light controls
-        ImGui::DragFloat("candlePointLight position", (float*)&programState->candlePointLight.position, 0.005);
-        ImGui::DragFloat("candlePointLight.constant", &programState->candlePointLight.constant, 0.005, 0.0, 1.0);
-        ImGui::DragFloat("candlePointLight.linear", &programState->candlePointLight.linear, 0.005, 0.0, 1.0);
-        ImGui::DragFloat("candlePointLight.quadratic", &programState->candlePointLight.quadratic, 0.005, 0.0, 1.0);
+            if(ImGui::TreeNode("Tree"))
+            {
+                if(ImGui::TreeNode("Position"))
+                {
+                    ImGui::DragFloat3("Tree position", (float*)&programState->treeModelPosition,0.005f);
+                    ImGui::TreePop();
+                }
 
-        //Planet controls
-        ImGui::DragFloat("Planet scale", &programState->eyeModelScale, 0.05, 0.1, 4.0);
+                if(ImGui::TreeNode("Scale"))
+                {
+                    ImGui::DragFloat("Tree scale", &programState->treeModelScale, 0.005, 0.1, 4.0);
+                    ImGui::TreePop();
+                }
+                ImGui::TreePop();
+            }
 
-        //Eye light controls
-        ImGui::DragFloat("eyePointLight1.constant", &programState->eyePointLight1.constant, 0.005, 0.0, 1.0);
-        ImGui::DragFloat("eyePointLight1.linear", &programState->eyePointLight1.linear, 0.005, 0.0, 1.0);
-        ImGui::DragFloat("eyePointLight1.quadratic", &programState->eyePointLight1.quadratic, 0.005, 0.0, 1.0);
+            if(ImGui::TreeNode("Round Table"))
+            {
+                if(ImGui::TreeNode("Position"))
+                {
+                    ImGui::DragFloat3("Round Table position", (float*)&programState->roundTableModelPosition,0.005f);
+                    ImGui::TreePop();
+                }
 
+                if(ImGui::TreeNode("Scale"))
+                {
+                    ImGui::DragFloat("Round Table scale", &programState->roundTableModelScale, 0.005, 0.1, 4.0);
+                    ImGui::TreePop();
+                }
+                ImGui::TreePop();
+            }
 
+            if(ImGui::TreeNode("Candle"))
+            {
+                if(ImGui::TreeNode("Position"))
+                {
+                    ImGui::DragFloat3("Candle position", (float*)&programState->candleModelPosition,0.005f);
+                    ImGui::TreePop();
+                }
+
+                if(ImGui::TreeNode("Scale"))
+                {
+                    ImGui::DragFloat("Candle scale", &programState->candleModelScale, 0.005, 0.1, 4.0);
+                    ImGui::TreePop();
+                }
+                ImGui::TreePop();
+            }
+
+            if(ImGui::TreeNode("Eyeballs"))
+            {
+                if(ImGui::TreeNode("Scale"))
+                {
+                    ImGui::DragFloat("Planet scale", &programState->eyeModelScale, 0.05, 0.1, 4.0);
+                    ImGui::TreePop();
+                }
+                ImGui::TreePop();
+            }
+        }
+
+        if(ImGui::CollapsingHeader("Lights"))
+        {
+            ImGui::BulletText(programState->blinn ? "Blinn" : "Phong");
+            if(ImGui::TreeNode("Eyeball 1 Point Light"))
+            {
+                if(ImGui::TreeNode("ADS"))
+                {
+                    ImGui::DragFloat3("Ambient", (float*)&programState->eyePointLight1.ambient, 0.005, 0.0, 1.0);
+                    ImGui::DragFloat3("Diffuse", (float*)&programState->eyePointLight1.diffuse, 0.005, 0.0, 1.0);
+                    ImGui::DragFloat3("Specular", (float*)&programState->eyePointLight1.specular, 0.005, 0.0, 1.0);
+                    ImGui::TreePop();
+                }
+
+                if(ImGui::TreeNode("Attenuation"))
+                {
+                    ImGui::DragFloat("Constant", (float*)&programState->eyePointLight1.constant, 0.005, 0.0, 1.0);
+                    ImGui::DragFloat("Linear", (float*)&programState->eyePointLight1.linear, 0.005, 0.0, 1.0);
+                    ImGui::DragFloat("Quadratic", (float*)&programState->eyePointLight1.quadratic, 0.005, 0.0, 1.0);
+                    ImGui::TreePop();
+                }
+                ImGui::TreePop();
+            }
+
+            if(ImGui::TreeNode("Eyeball 2 Point Light"))
+            {
+                if(ImGui::TreeNode("ADS"))
+                {
+                    ImGui::DragFloat3("Ambient", (float*)&programState->eyePointLight2.ambient, 0.005, 0.0, 1.0);
+                    ImGui::DragFloat3("Diffuse", (float*)&programState->eyePointLight2.diffuse, 0.005, 0.0, 1.0);
+                    ImGui::DragFloat3("Specular", (float*)&programState->eyePointLight2.specular, 0.005, 0.0, 1.0);
+                    ImGui::TreePop();
+                }
+
+                if(ImGui::TreeNode("Attenuation"))
+                {
+                    ImGui::DragFloat("Constant", (float*)&programState->eyePointLight2.constant, 0.005, 0.0, 1.0);
+                    ImGui::DragFloat("Linear", (float*)&programState->eyePointLight2.linear, 0.005, 0.0, 1.0);
+                    ImGui::DragFloat("Quadratic", (float*)&programState->eyePointLight2.quadratic, 0.005, 0.0, 1.0);
+                    ImGui::TreePop();
+                }
+                ImGui::TreePop();
+            }
+
+            if(ImGui::TreeNode("Candle Point Light"))
+            {
+                if(ImGui::TreeNode("Position"))
+                {
+                    ImGui::DragFloat3("Candle point light position", (float*)&programState->candlePointLight.position, 0.005);
+                    ImGui::TreePop();
+                }
+
+                if(ImGui::TreeNode("ADS"))
+                {
+                    ImGui::DragFloat3("Ambient", (float*)&programState->candlePointLight.ambient, 0.005, 0.0, 1.0);
+                    ImGui::DragFloat3("Diffuse", (float*)&programState->candlePointLight.diffuse, 0.005, 0.0, 1.0);
+                    ImGui::DragFloat3("Specular", (float*)&programState->candlePointLight.specular, 0.005, 0.0, 1.0);
+                    ImGui::TreePop();
+                }
+
+                if(ImGui::TreeNode("Attenuation"))
+                {
+                    ImGui::DragFloat("Constant", (float*)&programState->candlePointLight.constant, 0.005, 0.0, 1.0);
+                    ImGui::DragFloat("Linear", (float*)&programState->candlePointLight.linear, 0.005, 0.0, 1.0);
+                    ImGui::DragFloat("Quadratic", (float*)&programState->candlePointLight.quadratic, 0.005, 0.0, 1.0);
+                    ImGui::TreePop();
+                }
+                ImGui::TreePop();
+            }
+
+            if(ImGui::TreeNode("World Directional Light"))
+            {
+
+                if(ImGui::TreeNode("ADS"))
+                {
+                    ImGui::DragFloat3("Ambient", (float*)&programState->dirLight.ambient, 0.005, 0.0, 1.0);
+                    ImGui::DragFloat3("Diffuse", (float*)&programState->dirLight.diffuse, 0.005, 0.0, 1.0);
+                    ImGui::DragFloat3("Specular", (float*)&programState->dirLight.specular, 0.005, 0.0, 1.0);
+                    ImGui::TreePop();
+                }
+                ImGui::TreePop();
+            }
+        }
 
         ImGui::End();
     }
