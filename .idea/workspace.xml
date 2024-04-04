@@ -27,7 +27,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/imgui.ini" beforeDir="false" afterPath="$PROJECT_DIR$/imgui.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project_base" beforeDir="false" afterPath="$PROJECT_DIR$/project_base" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/program_state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/program_state.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/shaders/2.model_lighting.fs" beforeDir="false" afterPath="$PROJECT_DIR$/resources/shaders/2.model_lighting.fs" afterDir="false" />
@@ -74,7 +73,7 @@
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "improvment/imgui",
+    "git-widget-placeholder": "improvment/spotlight",
     "last_opened_file_path": "/home/filip/Documents/Faks/RG/Projekat/rg-projekat/resources/objects/candle",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
