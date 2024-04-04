@@ -51,6 +51,21 @@ struct PointLight {
     float quadratic;
 };
 
+struct SpotLight {
+    glm::vec3 position;
+    glm::vec3 direction;
+    float cutOff;
+    float outerCutOff;
+
+    float constant;
+    float linear;
+    float quadratic;
+
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
+};
+
 struct DirLight {
     glm::vec3 direction;
     glm::vec3 ambient;
@@ -79,9 +94,11 @@ struct ProgramState {
     float roundTableModelScale = 1.0f;
     float candleModelScale = 0.1f;
     bool blinn = false;
+    bool isCamSpotLightEnabled = false;
     PointLight eyePointLight1;
     PointLight eyePointLight2;
     PointLight candlePointLight;
+    SpotLight cameraSpotLight;
     DirLight dirLight;
     ProgramState()
             : camera(glm::vec3(0.0f, 0.0f, 20.0f)) {}
@@ -300,6 +317,20 @@ int main() {
     candlePointLight.linear = 0.09f;
     candlePointLight.quadratic = 0.032f;
 
+    //Camera Spotlight
+    SpotLight& cameraSpotlight = programState->cameraSpotLight;
+    cameraSpotlight.direction = programState->camera.Front;
+    cameraSpotlight.position = programState->camera.Position;
+    cameraSpotlight.ambient = glm::vec3(0.0f, 0.0f, 0.0f);
+    cameraSpotlight.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
+    cameraSpotlight.specular = glm::vec3(1.0, 1.0, 1.0);
+    cameraSpotlight.cutOff = glm::cos(glm::radians(12.5f));
+    cameraSpotlight.outerCutOff = glm::cos(glm::radians(15.0f));
+
+    cameraSpotlight.constant = 1.0f;
+    cameraSpotlight.linear = 0.09f;
+    cameraSpotlight.quadratic = 0.032f;
+
     //Dir light
     DirLight& dirLight = programState->dirLight;
     dirLight.direction = glm::vec3(-0.2f, -1.0f, -0.3f);
@@ -359,6 +390,24 @@ int main() {
         ourShader.setFloat("eyePointLight2.linear", eyePointLight2.linear);
         ourShader.setFloat("eyePointLight2.quadratic", eyePointLight2.quadratic);
 
+        //Camera spotlight
+
+        cameraSpotlight.position = programState->camera.Position;
+        cameraSpotlight.direction = programState->camera.Front;
+        ourShader.setVec3("cameraSpotLight.position", cameraSpotlight.position);
+        ourShader.setVec3("cameraSpotLight.direction", cameraSpotlight.direction);
+        ourShader.setVec3("cameraSpotLight.ambient", cameraSpotlight.ambient);
+        ourShader.setVec3("cameraSpotLight.diffuse", cameraSpotlight.diffuse);
+        ourShader.setVec3("cameraSpotLight.specular", cameraSpotlight.specular);
+        ourShader.setFloat("cameraSpotLight.constant", cameraSpotlight.constant);
+        ourShader.setFloat("cameraSpotLight.linear", cameraSpotlight.linear);
+        ourShader.setFloat("cameraSpotLight.quadratic", cameraSpotlight.quadratic);\
+        ourShader.setFloat("cameraSpotLight.cutOff", cameraSpotlight.cutOff);
+        ourShader.setFloat("cameraSpotLight.outerCutOff", cameraSpotlight.outerCutOff);
+
+
+
+
         // Candle point light
         // TO DO: Place this in imgui and fix light position
 //        glm::vec3 candleFlameColor = glm::vec3(0.1f, 0.05f, 0.01f); // Example flame color (adjust as needed)
@@ -380,6 +429,7 @@ int main() {
 
 
         ourShader.setBool("blinn", programState->blinn);
+        ourShader.setFloat("isCamSpotLightEnabled", programState->isCamSpotLightEnabled);
 
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(programState->camera.Zoom),
@@ -798,4 +848,6 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 
     if(key == GLFW_KEY_B && action == GLFW_PRESS)
         programState->blinn = !programState->blinn;
+    if(key == GLFW_KEY_F && action == GLFW_PRESS)
+        programState->isCamSpotLightEnabled = !programState->isCamSpotLightEnabled;
 }
