@@ -27,9 +27,9 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imgui.ini" beforeDir="false" afterPath="$PROJECT_DIR$/imgui.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project_base" beforeDir="false" afterPath="$PROJECT_DIR$/project_base" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/program_state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/program_state.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/shaders/2.model_lighting.fs" beforeDir="false" afterPath="$PROJECT_DIR$/resources/shaders/2.model_lighting.fs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -73,8 +73,8 @@
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "improvment/spotlight",
-    "last_opened_file_path": "/home/filip/Documents/Faks/RG/Projekat/rg-projekat/resources/objects/candle",
+    "git-widget-placeholder": "feature/face-culling",
+    "last_opened_file_path": "/home/filip/Documents/Faks/RG/Projekat/rg-projekat/resources/objects/bunker",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -86,11 +86,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/resources/objects/bunker" />
+      <recent name="$PROJECT_DIR$/resources/objects/dome" />
+      <recent name="$PROJECT_DIR$/resources/objects/firewood" />
       <recent name="$PROJECT_DIR$/resources/objects/candle" />
       <recent name="$PROJECT_DIR$/resources/objects/round-table" />
-      <recent name="$PROJECT_DIR$/resources/objects/shed" />
-      <recent name="$PROJECT_DIR$/resources/objects/tree" />
-      <recent name="$PROJECT_DIR$/resources/objects/picnic table" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/resources/objects/island" />

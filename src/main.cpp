@@ -85,6 +85,7 @@ struct ProgramState {
     glm::vec3 treeModelPosition = glm::vec3(0.0f);
     glm::vec3 roundTableModelPosition = glm::vec3(0.0f);
     glm::vec3 candleModelPosition = roundTableModelPosition;
+    glm::vec3 firewoodModelPosition = glm::vec3(0.0f);
     float islandModelScale = 0.1f;
     float eyeModelScale = 1.0f;
     float lighthouseModelScale = 0.3f;
@@ -93,6 +94,7 @@ struct ProgramState {
     float treeModelScale = 1.0f;
     float roundTableModelScale = 1.0f;
     float candleModelScale = 0.1f;
+    float firewoodModelScale = 0.1f;
     bool blinn = false;
     bool isCamSpotLightEnabled = false;
     PointLight eyePointLight1;
@@ -143,7 +145,11 @@ void ProgramState::SaveToFile(std::string filename) {
         << candleModelPosition.x << '\n'
         << candleModelPosition.y << '\n'
         << candleModelPosition.z << '\n'
-        << candleModelScale << '\n';
+        << candleModelScale << '\n'
+        << firewoodModelPosition.x << '\n'
+        << firewoodModelPosition.y << '\n'
+        << firewoodModelPosition.z << '\n'
+        << firewoodModelScale << '\n';
 }
 
 void ProgramState::LoadFromFile(std::string filename) {
@@ -182,7 +188,11 @@ void ProgramState::LoadFromFile(std::string filename) {
            >> candleModelPosition.x
            >> candleModelPosition.y
            >> candleModelPosition.z
-           >> candleModelScale;
+           >> candleModelScale
+           >> firewoodModelPosition.x
+           >> firewoodModelPosition.y
+           >> firewoodModelPosition.z
+           >> firewoodModelScale;
     }
 }
 
@@ -283,6 +293,9 @@ int main() {
 
     Model candleModel("resources/objects/candle/candle.obj");
     candleModel.SetShaderTextureNamePrefix("material.");
+
+    Model firewoodModel("resources/objects/firewood/firewood.obj");
+    firewoodModel.SetShaderTextureNamePrefix("material.");
 
     //Eye point light 1
     PointLight& eyePointLight1 = programState->eyePointLight1;
@@ -478,46 +491,57 @@ int main() {
         eyeModel2.Draw(ourShader);
 
         // render the lighthouse model
-        glm::mat4 lighthouse = glm::mat3(1.0f);
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+
+        glm::mat4 lighthouse = glm::mat4(1.0f);
         lighthouse = glm::translate(lighthouse, programState->lighthouseModelPosition);
         lighthouse = glm::scale(lighthouse, glm::vec3(programState->lighthouseModelScale));
         ourShader.setMat4("model", lighthouse);
         lighthouseModel.Draw(ourShader);
+        glDisable(GL_CULL_FACE);
 
         // render shed model
-        glm::mat4 shed = glm::mat3(1.0f);
+        glm::mat4 shed = glm::mat4(1.0f);
         shed = glm::translate(shed, programState->shedModelPosition);
         shed = glm::scale(shed, glm::vec3(programState->shedModelScale));
         ourShader.setMat4("model", shed);
         shedModel.Draw(ourShader);
 
         // render picnic table model
-        glm::mat4 picnicTable = glm::mat3(1.0f);
+        glm::mat4 picnicTable = glm::mat4(1.0f);
         picnicTable = glm::translate(picnicTable, programState->picnicTableModelPosition);
         picnicTable = glm::scale(picnicTable, glm::vec3(programState->picnicTableModelScale));
         ourShader.setMat4("model", picnicTable);
         picnicTableModel.Draw(ourShader);
 
         // render tree model
-        glm::mat4 tree = glm::mat3(1.0f);
+        glm::mat4 tree = glm::mat4 (1.0f);
         tree = glm::translate(tree, programState->treeModelPosition);
         tree = glm::scale(tree, glm::vec3(programState->treeModelScale));
         ourShader.setMat4("model", tree);
         treeModel.Draw(ourShader);
 
         // render round table model
-        glm::mat4 roundTable = glm::mat3(1.0f);
+        glm::mat4 roundTable = glm::mat4(1.0f);
         roundTable = glm::translate(roundTable, programState->roundTableModelPosition);
         roundTable = glm::scale(roundTable, glm::vec3(programState->roundTableModelScale));
         ourShader.setMat4("model", roundTable);
         roundTableModel.Draw(ourShader);
 
         // render candle model
-        glm::mat4 candle = glm::mat3(1.0f);
+        glm::mat4 candle = glm::mat4(1.0f);
         candle = glm::translate(candle, programState->candleModelPosition);
         candle = glm::scale(candle, glm::vec3(programState->candleModelScale));
         ourShader.setMat4("model", candle);
         candleModel.Draw(ourShader);
+
+        // render firewood model
+        glm::mat4 firewood = glm::mat4(1.0f);
+        firewood = glm::translate(firewood, programState->firewoodModelPosition);
+        firewood = glm::scale(firewood, glm::vec3(programState->firewoodModelScale));
+        ourShader.setMat4("model", firewood);
+        firewoodModel.Draw(ourShader);
 
         if (programState->ImGuiEnabled)
             DrawImGui(programState);
@@ -719,6 +743,22 @@ void DrawImGui(ProgramState *programState) {
                 if(ImGui::TreeNode("Scale"))
                 {
                     ImGui::DragFloat("Candle scale", &programState->candleModelScale, 0.005, 0.1, 4.0);
+                    ImGui::TreePop();
+                }
+                ImGui::TreePop();
+            }
+
+            if(ImGui::TreeNode("Firewood"))
+            {
+                if(ImGui::TreeNode("Position"))
+                {
+                    ImGui::DragFloat3("firewood position", (float*)&programState->firewoodModelPosition,0.005f);
+                    ImGui::TreePop();
+                }
+
+                if(ImGui::TreeNode("Scale"))
+                {
+                    ImGui::DragFloat("firewood scale", &programState->firewoodModelScale, 0.005, 0.1, 4.0);
                     ImGui::TreePop();
                 }
                 ImGui::TreePop();
