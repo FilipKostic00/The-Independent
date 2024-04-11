@@ -1,11 +1,29 @@
-# project_base
-Prazan projekat sa pratećim bibliotekama koje koristimo na času. 
+# The Independent
+Faculty project for course Computer Graphics. Project consists of a scene rendered by program written in C++ using OpenGL, GLFW, GLM and Glad. 
 
-# Uputstvo
-1. `git clone https://github.com/matf-racunarska-grafika/project_base.git`
-2. CLion -> Open -> path/to/my/project_base
-3. Main se nalazi u src/main.cpp
-4. Cpp fajlovi idu u src folder
-5. Zaglavlja (h i hpp) fajlovi idu u include
-6. Šejderi idu u folder shaders. `Vertex shader` ima ekstenziju `.vs`, `fragment shader` ima ekstenziju `.fs`
-7. ALT+SHIFT+F10 -> project_base -> run
+The project contains:
+* **Models**: Islands, Lighthouse, Eyeball, House, Picnic Table, Round Table, Lamp, Tree
+* **Lighting**: directional, spot, and point light implemented using Blinn-Phong lighting model
+* **Shaders**: shader for rendering and and lightning models, skybox shader, hdr shader and blur shader.
+* **Skybox cubemap**: 6 images of nebula combined to create a skybox and illusion of space;
+* **Face culling**: Implemented in a way that inside of a lighthouse model is not rendered;
+* **HDR and Bloom**
+
+---------------------------
+## **Commands**
+
+| ***Key***                | ***Action***                  |
+|--------------------------|-------------------------------|
+| ***Camera Movement***    |
+| W                        | Forward                       |
+| S                        | Back                          |
+| A                        | Left                          |
+| D                        | Right                         |
+| Scroll                   | Zoom                          |
+| ***Advanced lightning*** |
+| B                        | Blinn/Phong Toggle            |
+| H                        | HDR Toggle                    |
+| J                        | Bloom Toggle                  |
+| ***General***            |
+| F                        | Flashlight (Camera spotlight) |
+| Esc                      | Exit                          |
