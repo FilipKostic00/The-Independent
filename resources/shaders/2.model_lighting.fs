@@ -151,6 +151,7 @@ void main()
     vec3 result = CalcDirLight(dirLight, normal, viewDir);
     result += CalcPointLight(eyePointLight2, normal, FragPos, viewDir);
     result += CalcPointLight(eyePointLight1, normal, FragPos, viewDir);
+    result += CalcPointLight(candlePointLight, normal, FragPos, viewDir);
 
     if(isCamSpotLightEnabled)
         result += CalcSpotLight(cameraSpotLight, normal, FragPos, viewDir);
