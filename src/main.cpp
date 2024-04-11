@@ -557,7 +557,6 @@ int main() {
         ourShader.setFloat("eyePointLight2.quadratic", eyePointLight2.quadratic);
 
         //Candle point light
-        //candlePointLight.position = programState->candleModelPosition;
         ourShader.setVec3("candlePointLight.position", candlePointLight.position);
         ourShader.setVec3("candlePointLight.ambient", candlePointLight.ambient);
         ourShader.setVec3("candlePointLight.diffuse", candlePointLight.diffuse);
@@ -567,7 +566,6 @@ int main() {
         ourShader.setFloat("candlePointLight.quadratic", candlePointLight.quadratic);
 
         //Camera spotlight
-
         cameraSpotlight.position = programState->camera.Position;
         cameraSpotlight.direction = programState->camera.Front;
         ourShader.setVec3("cameraSpotLight.position", cameraSpotlight.position);
