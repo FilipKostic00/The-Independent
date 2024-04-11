@@ -1104,12 +1104,12 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
         programState->CameraMouseMovementUpdateEnabled = !programState->ImGuiEnabled;
     }
 
-    if(key == GLFW_KEY_B && action == GLFW_PRESS)
+    if(key == GLFW_KEY_P && action == GLFW_PRESS)
         programState->blinn = !programState->blinn;
     if(key == GLFW_KEY_F && action == GLFW_PRESS)
         programState->isCamSpotLightEnabled = !programState->isCamSpotLightEnabled;
     if(key == GLFW_KEY_H && action == GLFW_PRESS)
         programState->hdr = !programState->hdr;
-    if(key == GLFW_KEY_J && action == GLFW_PRESS)
+    if(key == GLFW_KEY_B && action == GLFW_PRESS)
         programState->bloom = !programState->bloom;
 }
