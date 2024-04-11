@@ -157,7 +157,9 @@ void ProgramState::SaveToFile(std::string filename) {
         << firewoodModelPosition.x << '\n'
         << firewoodModelPosition.y << '\n'
         << firewoodModelPosition.z << '\n'
-        << firewoodModelScale << '\n';
+        << firewoodModelScale << '\n'
+        << exposure << '\n'
+        << gamma << '\n';
 }
 
 void ProgramState::LoadFromFile(std::string filename) {
@@ -200,7 +202,9 @@ void ProgramState::LoadFromFile(std::string filename) {
            >> firewoodModelPosition.x
            >> firewoodModelPosition.y
            >> firewoodModelPosition.z
-           >> firewoodModelScale;
+           >> firewoodModelScale
+           >> exposure
+           >> gamma;
     }
 }
 
@@ -476,7 +480,7 @@ int main() {
 
     hdrShader.use();
     hdrShader.setInt("scene", 0);
-    hdrShader.setInt("blumBloor",0);
+    hdrShader.setInt("bloomBlur",1);
     blurShader.use();
     blurShader.setInt("image", 0);
 
@@ -832,14 +836,8 @@ void DrawImGui(ProgramState *programState) {
         static float f = 0.0f;
         ImGui::Begin("Controls");
         ImGui::Text(programState->hdr ? "HDR ON" : "HDR OFF");
-        ImGui::Text(programState->bloom ? "Bloom ON" : "Bloom OFF");
+        ImGui::Text(programState->bloom && programState->hdr ? "Bloom ON" : "Bloom OFF");
         if(ImGui::CollapsingHeader("HDR"))
-        {
-            ImGui::DragFloat("Exposure", (float *) &programState->exposure, 0.005f, 0.1f, 1.0f);
-            ImGui::DragFloat("Gamma", (float *) &programState->gamma, 0.005f, 0.1f, 4.0f);
-        }
-
-        if(ImGui::CollapsingHeader("Bloom"))
         {
             ImGui::DragFloat("Exposure", (float *) &programState->exposure, 0.005f, 0.1f, 1.0f);
             ImGui::DragFloat("Gamma", (float *) &programState->gamma, 0.005f, 0.1f, 4.0f);
