@@ -2,13 +2,23 @@
 Faculty project for course Computer Graphics. Project consists of a scene rendered by program written in C++ using OpenGL, GLFW, GLM and Glad. 
 
 The project contains:
-* **Models**: Islands, Lighthouse, Eyeball, House, Picnic Table, Round Table, Candle, Tree
+* **Models**: Islands, Lighthouse, Eyeball, House, Picnic Table, Round Table, Candle, Firewood, Tree
 * **Lighting**: directional, spot, and point light implemented using Blinn-Phong lighting model
 * **Shaders**: shader for rendering and and lightning models, skybox shader, hdr shader and blur shader.
 * **Skybox cubemap**: 6 images of nebula combined to create a skybox and illusion of space;
 * **Face culling**: Implemented in a way that inside of a lighthouse model is not rendered;
 * **Blending**: Implemented with discarding parts of textures that have low alpha level. Specifically implemented with textures of flowers on the tree model. 
 * **HDR and Bloom**
+---------------------------
+## **Screenshots**
+![Scr3.png](img%2FScr3.png)
+![Scr4.png](img%2FScr4.png)
+**Control menu**
+![Scr5.png](img%2FScr5.png)
+
+HDR with Bloom             | Without HDR
+:-------------------------:|:-------------------------:
+![Scr1.png](img%2FScr1.png)  |  ![Scr2.png](img%2FScr2.png)
 
 ---------------------------
 ## **Commands**
@@ -26,6 +36,7 @@ The project contains:
 | H                        | HDR Toggle                    |
 | B                        | Bloom Toggle                  |
 | ***General***            |
+| F1                       | Display control menu          |
 | F                        | Flashlight (Camera spotlight) |
 | Esc                      | Exit                          |
 
@@ -39,4 +50,5 @@ All models are free and downloaded from sketchfab.com from creators listed below
 * **Picnic table model**: Anserkon
 * **Round table model**: CheBe
 * **Tree model**: TatianaDevos 
-* **Candle model**: Incg5764
+* **Candle model**: LiliumLetifer
+* **Firewood model**: Pixel Life

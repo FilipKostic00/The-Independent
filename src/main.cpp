@@ -368,24 +368,36 @@ int main() {
     //Eye point light 1
     PointLight& eyePointLight1 = programState->eyePointLight1;
     eyePointLight1.position = glm::vec3(4.0f, 4.0, 0.0);
-    eyePointLight1.ambient = glm::vec3(0.735f, 0.735f, 0.735f);
-    eyePointLight1.diffuse = glm::vec3(0.8, 0.8, 0.8);
-    eyePointLight1.specular = glm::vec3(1.0, 1.0, 1.0);
+    eyePointLight1.ambient = glm::vec3(0.5f, 0.5f, 0.5f);
+    eyePointLight1.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
+    eyePointLight1.specular = glm::vec3(0.5f, 0.5f, 0.5f);
 
-    eyePointLight1.constant = 0.505f;
-    eyePointLight1.linear = 0.025f;
-    eyePointLight1.quadratic = 0.015f;
+    eyePointLight1.constant = 0.0f;
+    eyePointLight1.linear = 0.4f;
+    eyePointLight1.quadratic = 0.0f;
 
     //Eye point light 2
     PointLight& eyePointLight2 = programState->eyePointLight2;
     eyePointLight2.position = glm::vec3(4.0f, 4.0, 0.0);
-    eyePointLight2.ambient = glm::vec3(0.735f, 0.735f, 0.735f);
-    eyePointLight2.diffuse = glm::vec3(0.8, 0.8, 0.8);
-    eyePointLight2.specular = glm::vec3(1.0, 1.0, 1.0);
+    eyePointLight2.ambient = glm::vec3(0.5f, 0.5f, 0.5f);
+    eyePointLight2.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
+    eyePointLight2.specular = glm::vec3(0.5f, 0.5f, 0.5f);
 
-    eyePointLight2.constant = 0.505f;
-    eyePointLight2.linear = 0.025f;
-    eyePointLight2.quadratic = 0.015f;
+    eyePointLight2.constant = 0.0f;
+    eyePointLight2.linear = 0.4f;
+    eyePointLight2.quadratic = 0.0f;
+
+    //Candle point light
+    PointLight& candlePointLight = programState->candlePointLight;
+    candlePointLight.position = glm::vec3(0.11f, 2.03f, 0.640f);
+
+    candlePointLight.ambient = glm::vec3(0.933f, 0.6f, 0.06f);
+    candlePointLight.diffuse = glm::vec3(0.933f, 0.6f, 0.06f);
+    candlePointLight.specular = glm::vec3(0.933f, 0.6f, 0.06f);
+
+    candlePointLight.constant = 0.6f;
+    candlePointLight.linear = 1.0f;
+    candlePointLight.quadratic = 1.0f;
 
     //Camera Spotlight
     SpotLight& cameraSpotlight = programState->cameraSpotLight;
@@ -404,9 +416,9 @@ int main() {
     //Dir light
     DirLight& dirLight = programState->dirLight;
     dirLight.direction = glm::vec3(-0.2f, -1.0f, -0.3f);
-    dirLight.ambient = glm::vec3(0.02f, 0.02f, 0.02f);
-    dirLight.diffuse = glm::vec3(0.01f, 0.01f, 0.01f);
-    dirLight.specular = glm::vec3(0.01f, 0.01f, 0.01f);
+    dirLight.ambient = glm::vec3(0.0f, 0.0f, 0.0f);
+    dirLight.diffuse = glm::vec3(0.0f, 0.0f, 0.0f);
+    dirLight.specular = glm::vec3(0.0f, 0.0f, 0.0f);
 
 
     float skyboxVertices[] = {
@@ -543,6 +555,16 @@ int main() {
         ourShader.setFloat("eyePointLight2.constant", eyePointLight2.constant);
         ourShader.setFloat("eyePointLight2.linear", eyePointLight2.linear);
         ourShader.setFloat("eyePointLight2.quadratic", eyePointLight2.quadratic);
+
+        //Candle point light
+        //candlePointLight.position = programState->candleModelPosition;
+        ourShader.setVec3("candlePointLight.position", candlePointLight.position);
+        ourShader.setVec3("candlePointLight.ambient", candlePointLight.ambient);
+        ourShader.setVec3("candlePointLight.diffuse", candlePointLight.diffuse);
+        ourShader.setVec3("candlePointLight.specular", candlePointLight.specular);
+        ourShader.setFloat("candlePointLight.constant", candlePointLight.constant);
+        ourShader.setFloat("candlePointLight.linear", candlePointLight.linear);
+        ourShader.setFloat("candlePointLight.quadratic", candlePointLight.quadratic);
 
         //Camera spotlight
 
